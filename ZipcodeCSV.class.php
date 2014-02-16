@@ -67,7 +67,7 @@ class ZipcodeCSV {
 
 			// 重複排除処理
 			$unique_key	= $this->_getUniqueKey($row);
-			if (! $processed[$unique_key]) {
+			if (! isset($processed[$unique_key])) {
 				fputcsv($fp_conv, $this->_getSaveColumns($row));
 			}
 
