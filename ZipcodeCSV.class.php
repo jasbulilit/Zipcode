@@ -66,12 +66,12 @@ class ZipcodeCSV {
 			);
 
 			// 重複排除処理
-			$uniqe_key	= $this->_getUniqeKey($row);
-			if (! isset($processed[$uniqe_key])) {
+			$unique_key	= $this->_getUniqueKey($row);
+			if (! isset($processed[$unique_key])) {
 				fputcsv($fp_conv, $this->_getSaveColumns($row));
 			}
 
-			$processed[$uniqe_key]	= true;
+			$processed[$unique_key]	= true;
 			$prev_zipcode			= $row['zipcode'];
 		}
 		fclose($fp_orig);
@@ -87,7 +87,7 @@ class ZipcodeCSV {
 	 * @param	array	$row	行データ
 	 * @return	string
 	 */
-	protected function _getUniqeKey($row) {
+	protected function _getUniqueKey($row) {
 		return sprintf(
 			'%s_%s_%s_%s',
 			$row['zipcode'], $row['pref_nm'], $row['city'], $row['community_area']
