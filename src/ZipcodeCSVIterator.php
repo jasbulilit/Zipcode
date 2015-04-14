@@ -10,6 +10,29 @@ namespace ZipcodeCSV;
 
 class ZipcodeCSVIterator extends CSVIterator {
 
+	private $_prev_zipcode;
+
+	/**
+	 * 読み込み行の郵便番号・住所の取得
+	 *
+	 * @return ZipcodeCSVRow
+	 */
+	public function current() {
+		$row = parent::current();
+		return new ZipcodeCSVRow($row, $this->_prev_zipcode);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function next() {
+		$row = parent::current();
+		$this->_prev_zipcode = $row[ZipcodeCSVRow::COL_ZIPCODE];
+		parent::next();
+	}
+}
+
+class ZipcodeCSVRow extends \ArrayObject {
 	/**
 	 * CSV columns
 	 * @link http://www.post.japanpost.jp/zipcode/dl/readme.html
@@ -30,16 +53,14 @@ class ZipcodeCSVIterator extends CSVIterator {
 	const COL_UPDATE_KN				= 13;	// 14.更新区分(0:変更なし/1:変更あり)
 	const COL_UPDATE_REASON_KN		= 14;	// 15.変更理由区分
 
+	private $_raw_data;
 	private $_prev_zipcode;
 
-	/**
-	 * 読み込み行の郵便番号・住所の取得
-	 *
-	 * @return \ArrayObject
-	 */
-	public function current() {
-		$row = parent::current();
-		return new \ArrayObject(array(
+	public function __construct($row, $prev_zipcode) {
+		$this->_raw_data = $row;
+		$this->_prev_zipcode = $prev_zipcode;
+
+		parent::__construct(array(
 			'jis_code'				=> $row[self::COL_JIS_CODE],
 			'old_zipcode'			=> rtrim($row[self::COL_OLD_ZIPCODE]),
 			'zipcode'				=> $row[self::COL_ZIPCODE],
@@ -49,17 +70,7 @@ class ZipcodeCSVIterator extends CSVIterator {
 			'pref'					=> $row[self::COL_PREF],
 			'city'					=> $row[self::COL_CITY],
 			'community_area'		=> $this->_convertCommunityArea($row[self::COL_COMMUNITY_AREA]),
-			'is_split'				=> $this->_isSplitAddress()
-		), \ArrayObject::ARRAY_AS_PROPS);
-	}
-
-	/**
-	 * @return void
-	 */
-	public function next() {
-		$row = $this->getRawData();
-		$this->_prev_zipcode = $row[self::COL_ZIPCODE];
-		parent::next();
+		), parent::ARRAY_AS_PROPS);
 	}
 
 	/**
@@ -68,7 +79,7 @@ class ZipcodeCSVIterator extends CSVIterator {
 	 * @return array
 	 */
 	public function getRawData() {
-		return parent::current();
+		return $this->_raw_data;
 	}
 
 	/**
@@ -78,7 +89,7 @@ class ZipcodeCSVIterator extends CSVIterator {
 	 * @access	public
 	 * @return	boolean
 	 */
-	private function _isSplitAddress() {
+	public function isSplitAddress() {
 		$current_row = $this->getRawData();
 		if ($current_row[self::COL_DUPLICATE_FLG] != '1'
 			&& $current_row[self::COL_ZIPCODE] == $this->_prev_zipcode) {
@@ -117,6 +128,7 @@ class ZipcodeCSVIterator extends CSVIterator {
 			|| mb_strpos($community_area, $markers['）'][$marker_key]) !== false) {
 			$community_area = '';
 		}
+
 		return $community_area;
 	}
 

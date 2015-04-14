@@ -51,16 +51,15 @@ class ZipcodeCSV {
 			}
 
 			// 複数行に分割記載しているデータ対策
-			if ($row->is_split) {
+			// 分割された行に記載されているのはカッコ書きで説明書きが長いものなので、無視する
+			if ($row->isSplitAddress()) {
 				continue;
 			}
 
 			// 重複排除処理
 			$unique_key	= $this->_getUniqueKey($row->zipcode, $row->pref, $row->city, $row->community_area);
 			if (! isset($processed[$unique_key])) {
-				$row_data = $row->getArrayCopy();
-				unset($row_data['is_split']);
-				fputcsv($fp_conv, $row_data);
+				fputcsv($fp_conv, $row->getArrayCopy());
 			}
 
 			$processed[$unique_key]	= true;
