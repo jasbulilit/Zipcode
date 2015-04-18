@@ -64,7 +64,7 @@ class ZipcodeCSV {
 
 			$processed[$unique_key]	= true;
 		}
-		$orig_csv = null;
+		unset($orig_csv);
 		fclose($fp_conv);
 
 		return rename($tmp_filepath, $save_path);
