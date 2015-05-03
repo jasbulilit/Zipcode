@@ -29,20 +29,11 @@ class ZipcodeCSV {
 	 * 郵便番号CSV加工処理
 	 *
 	 * @access	public
-	 * @param	string	$save_path	保存ファイルパス(未指定時は元のファイルに上書き)
+	 * @param	CSVWriter $writer
 	 * @return	boolean
 	 */
-	public function convert($save_path = null) {
+	public function convert($writer) {
 		$orig_csv = $this->_reader->getIterator();
-
-		$tmp_filepath = tempnam(sys_get_temp_dir(), $this->_tmpfile_prefix);
-		if (($fp_conv = fopen($tmp_filepath, 'w')) === false) {
-			return false;
-		}
-
-		if ($save_path === null) {
-			$save_path = $this->_csv_path;
-		}
 
 		$processed = null;
 		foreach ($orig_csv as $row) {
@@ -59,15 +50,14 @@ class ZipcodeCSV {
 			// 重複排除処理
 			$unique_key	= $this->_getUniqueKey($row->zipcode, $row->pref, $row->city, $row->community_area);
 			if (! isset($processed[$unique_key])) {
-				fputcsv($fp_conv, $row->getArrayCopy());
+				$writer->append($row->getArrayCopy());
 			}
 
 			$processed[$unique_key]	= true;
 		}
 		unset($orig_csv);
-		fclose($fp_conv);
 
-		return rename($tmp_filepath, $save_path);
+		return true;
 	}
 
 	/**
