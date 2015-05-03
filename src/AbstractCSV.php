@@ -50,13 +50,13 @@ abstract class AbstractCSV {
 	private $_filters = array();
 
 	/**
-	 * @param string $csv_path		filepath/url(when allow_url_fopen enabled)
+	 * @param string $csv_path		filepath
 	 * @param resource $context		stream context resource
 	 * @throws \InvalidArgumentException
 	 */
 	public function __construct($csv_path, $context = null) {
 		$this->_csv_path = $csv_path;
-		$this->_context = $context;
+		$this->setContext($context);
 	}
 
 	/**
@@ -123,6 +123,14 @@ abstract class AbstractCSV {
 	 */
 	public function setEscape($escape) {
 		$this->escape = $escape;
+	}
+
+	/**
+	 * @param resource
+	 * @return void
+	 */
+	public function setContext($context) {
+		$this->_context = $context;
 	}
 
 	/**
