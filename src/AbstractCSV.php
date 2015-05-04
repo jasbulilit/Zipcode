@@ -56,7 +56,9 @@ abstract class AbstractCSV {
 	 */
 	public function __construct($csv_path, $context = null) {
 		$this->_csv_path = $csv_path;
-		$this->setContext($context);
+		if ($context !== null) {
+			$this->setContext($context);
+		}
 	}
 
 	/**
@@ -128,8 +130,12 @@ abstract class AbstractCSV {
 	/**
 	 * @param resource
 	 * @return void
+	 * @throws \InvalidArgumentException
 	 */
 	public function setContext($context) {
+		if (! is_resource($context) || get_resource_type($context) != 'stream-context') {
+			throw new \InvalidArgumentException('Invalid stream context.');
+		}
 		$this->_context = $context;
 	}
 
@@ -152,7 +158,8 @@ abstract class AbstractCSV {
 			throw new \RuntimeException("Filter '{$filter_name}' already exists.");
 		}
 		if ($filter_class !== null) {
-			if (! stream_filter_register($filter_name, $filter_class)) {
+			if (! is_subclass_of($filter_class, 'php_user_filter')
+				|| ! stream_filter_register($filter_name, $filter_class)) {
 				throw new \RuntimeException("Failed to register stream filter {$filter_class} as {$filter_name}");
 			}
 		} else {
@@ -184,7 +191,7 @@ abstract class AbstractCSV {
 		if (count($this->_filters) > 0) {
 			return sprintf('php://filter/%s=%s/resource=%s',
 				$chain,
-				urlencode(implode('|', array_keys($this->_filters))),
+				implode('|', array_map('urlencode', array_keys($this->_filters))),
 				$file_path);
 		} else {
 			return $file_path;
