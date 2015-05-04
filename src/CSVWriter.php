@@ -16,25 +16,47 @@ class CSVWriter extends AbstractCSV {
 	private $_fp;
 
 	/**
-	 * @param string $csv_path		filepath
-	 * @param resource $context		stream context resource
+	 * @param array $row
+	 * @return void
 	 */
-	public function __construct($csv_path, $context = null) {
-		parent::__construct($csv_path, $context);
+	public function append(array $row) {
+		$fp = $this->_getFilePointer();
 
-		$uri = $this->buildUri($csv_path, parent::FILTER_CHAIN_WRITE);
-
-		$this->_fp = (isset($context)) ? fopen($uri, 'w', false, $context) : fopen($uri, 'w');
-		if ($this->_fp === false) {
-			throw new \RuntimeException('Failed to open file: ' . $uri);
+		if (version_compare(PHP_VERSION, '5.5.4') >= 0) {
+			fputcsv($fp, $row, $this->delimiter, $this->enclosure, $this->escape);
+		} else {
+			fputcsv($fp, $row, $this->delimiter, $this->enclosure);
 		}
 	}
 
-	public function append(array $row) {
-		if (version_compare(PHP_VERSION, '5.5.4') >= 0) {
-			fputcsv($this->_fp, $row, $this->delimiter, $this->enclosure, $this->escape);
-		} else {
-			fputcsv($this->_fp, $row, $this->delimiter, $this->enclosure);
+	/**
+	 * @return resource
+	 */
+	private function _getFilePointer() {
+		if (empty($this->_fp)) {
+			$this->_fp = $this->_initFilePointer();
 		}
+		return $this->_fp;
+	}
+
+	/**
+	 * @throws \RuntimeException
+	 * @return resource
+	 */
+	private function _initFilePointer() {
+		$mode = 'w';
+		$csv_path = $this->getCSVPath();
+		$context = $this->getContext();
+
+		$uri = $this->buildUri($csv_path, parent::FILTER_CHAIN_WRITE);
+
+		$fp = (isset($context))
+			? fopen($uri, $mode, false, $context)
+			: fopen($uri, $mode);
+		if ($fp === false) {
+			throw new \RuntimeException('Failed to open file: ' . $uri);
+		}
+
+		return $fp;
 	}
 }
