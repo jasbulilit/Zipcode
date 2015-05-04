@@ -10,8 +10,6 @@ namespace ZipcodeCSV;
 
 class ZipcodeCSV {
 
-	private $_tmpfile_prefix	= 'tmp';	// 一時ファイルのプレフィックス
-
 	private $_csv_path;
 	private $_reader;
 
@@ -48,12 +46,12 @@ class ZipcodeCSV {
 			}
 
 			// 重複排除処理
-			$unique_key	= $this->_getUniqueKey($row->zipcode, $row->pref, $row->city, $row->community_area);
+			$unique_key = $this->_getUniqueKey($row->zipcode, $row->pref, $row->city, $row->community_area);
 			if (! isset($processed[$unique_key])) {
 				$writer->append($row->getArrayCopy());
 			}
 
-			$processed[$unique_key]	= true;
+			$processed[$unique_key] = true;
 		}
 		unset($orig_csv);
 

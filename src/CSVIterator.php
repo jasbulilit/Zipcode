@@ -17,7 +17,7 @@ class CSVIterator implements \Iterator {
 
 	/**
 	 * @param string $csv_path	filepath/url(when allow_url_fopen enabled)
-	 * @param string $$delimiter
+	 * @param string $delimiter
 	 * @param string $enclosure
 	 * @param string $escape
 	 * @param array $options
