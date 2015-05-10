@@ -8,6 +8,17 @@
  */
 namespace ZipcodeCSV;
 
+/**
+ * @property string $jis_code 全国地方公共団体コード
+ * @property string $old_zipcode (旧)郵便番号(5桁)
+ * @property string $zipcode 郵便番号(7桁)
+ * @property string $pref_kana 都道府県名(半角カタカナ)
+ * @property string $city_kana 市区町村名(半角カタカナ)
+ * @property string $community_area_kana 町域名(半角カタカナ)
+ * @property string $pref 都道府県名
+ * @property string $city 市区町村名
+ * @property string $community_area 町域名
+ */
 class ZipcodeCSVRow extends \ArrayObject {
 	/**
 	 * CSV columns
@@ -83,10 +94,10 @@ class ZipcodeCSVRow extends \ArrayObject {
 	 */
 	private function _convertCommunityArea($community_area, $is_kana = false) {
 		static $markers = array(
-			'（'		=> array('（',	'('),
-			'一円'	=> array('一円',	'ｲﾁｴﾝ'),
-			'場合'	=> array('場合',	'ｹｲｻｲｶﾞﾅｲﾊﾞｱｲ'),
-			'）'		=> array('）',	')')
+			'（'	=> array('（', '('),
+			'一円'	=> array('一円', 'ｲﾁｴﾝ'),
+			'場合'	=> array('場合', 'ｹｲｻｲｶﾞﾅｲﾊﾞｱｲ'),
+			'）'	=> array('）', ')')
 		);
 		$marker_key = ($is_kana) ? 1 : 0;
 
