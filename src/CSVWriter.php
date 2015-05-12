@@ -30,6 +30,18 @@ class CSVWriter extends AbstractCSV {
 	}
 
 	/**
+	 * close file pointer
+	 *
+	 * @return void
+	 */
+	public function close() {
+		if (empty($this->_fp)) {
+			return;
+		}
+		fclose($this->_fp);
+	}
+
+	/**
 	 * @return resource
 	 */
 	private function _getFilePointer() {

@@ -38,10 +38,13 @@ class CSVWriterTest extends \PHPUnit_Framework_TestCase {
 		foreach ($dummy_data as $row) {
 			$writer->append($row);
 		}
+		$writer->close();
 
-		$this->assertEquals(file_get_contents(dirname(__FILE__) . '/dat/dummy_csv.csv'), file_get_contents($file_path));
+		$this->assertEquals(
+			file_get_contents(dirname(__FILE__) . '/dat/dummy_csv.csv'),
+			file_get_contents($file_path)
+		);
 	}
-
 
 	private function _getDummyRows() {
 		return array(
