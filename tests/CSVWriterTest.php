@@ -23,9 +23,6 @@ class CSVWriterTest extends \PHPUnit_Framework_TestCase {
 		vfsStream::setup('dummy_dir');
 	}
 
-	/**
-	 * @covers ::append
-	 */
 	public function testAppend() {
 		$file_path = vfsStream::url('dummy_dir/dummy.csv');
 
@@ -44,6 +41,13 @@ class CSVWriterTest extends \PHPUnit_Framework_TestCase {
 			file_get_contents(dirname(__FILE__) . '/dat/dummy_csv.csv'),
 			file_get_contents($file_path)
 		);
+	}
+
+	public function testClose() {
+		$file_path = vfsStream::url('dummy_dir/dummy.csv');
+
+		$writer = new \ZipcodeCSV\CSVWriter($file_path);
+		$writer->close();
 	}
 
 	private function _getDummyRows() {
