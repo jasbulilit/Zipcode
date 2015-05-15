@@ -16,8 +16,8 @@ class CSVReader extends AbstractCSV implements \IteratorAggregate {
 	private $_iterator_class;
 
 	/**
-	 * @param string $csv_path		filepath
-	 * @param resource $context		stream context resource
+	 * @param string $csv_path	filepath
+	 * @param resource|null $context	stream context resource
 	 * @param string $class_name	CSVIterator class name
 	 * @throws \InvalidArgumentException
 	 */

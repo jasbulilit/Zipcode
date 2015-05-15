@@ -185,8 +185,9 @@ class AbstractCSVTest extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * @covers ::buildUri
+	 * @dataProvider chainProvider
 	 */
-	public function testBuildUriWithFilter() {
+	public function testBuildUriWithFilter($chain) {
 		$filter_keys = array();
 		$filter_list = array(
 			'convert.iconv.utf-8/cp932',
@@ -202,26 +203,34 @@ class AbstractCSVTest extends \PHPUnit_Framework_TestCase {
 		$method->setAccessible(true);
 
 		$csv_path = 'dummy.csv';
-		$chain = 'read';
 		$uri = sprintf('php://filter/%s=%s/resource=%s', $chain, implode('|', $filter_keys), $csv_path);
 		$this->assertEquals($uri, $method->invoke($this->_csv, $csv_path, $chain));
 	}
 
 	/**
 	 * @covers ::buildUri
+	 * @dataProvider chainProvider
 	 */
-	public function testBuildUriWithoutFilter() {
+	public function testBuildUriWithoutFilter($chain) {
 		$method = new ReflectionMethod($this->_csv, 'buildUri');
 		$method->setAccessible(true);
 
 		$csv_path = 'dummy.csv';
-		$this->assertEquals($csv_path, $method->invoke($this->_csv, $csv_path));
+		$this->assertEquals($csv_path, $method->invoke($this->_csv, $csv_path, $chain));
 	}
 
 	public function filterProvider() {
 		return array(
 			array('dummy_filter', 'DummyFilterClass'),
 			array('build_in_filter', null)
+		);
+	}
+
+	public function chainProvider() {
+		$class_name = self::ABSTRACT_CSV;
+		return array(
+			array($class_name::FILTER_CHAIN_READ),
+			array($class_name::FILTER_CHAIN_WRITE)
 		);
 	}
 }

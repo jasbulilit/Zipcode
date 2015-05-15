@@ -51,7 +51,7 @@ abstract class AbstractCSV {
 
 	/**
 	 * @param string $csv_path		filepath
-	 * @param resource $context		stream context resource
+	 * @param resource|null $context		stream context resource
 	 * @throws \InvalidArgumentException
 	 */
 	public function __construct($csv_path, $context = null) {
@@ -149,7 +149,7 @@ abstract class AbstractCSV {
 
 	/**
 	 * @param string $filter_name
-	 * @param string $filter_class	set null if use build-in filter
+	 * @param string|null $filter_class	set null if use build-in filter
 	 * @return void
 	 * @throws \RuntimeException
 	 */
@@ -189,7 +189,7 @@ abstract class AbstractCSV {
 	 * @param	string	$chain
 	 * @return	string
 	 */
-	protected function buildUri($file_path, $chain = null) {
+	protected function buildUri($file_path, $chain) {
 		if (count($this->_filters) > 0 && isset($chain)) {
 			return sprintf('php://filter/%s=%s/resource=%s',
 				$chain,
