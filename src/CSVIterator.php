@@ -37,7 +37,7 @@ class CSVIterator implements \Iterator {
 
 	/**
 	 * @see \SplFileObject::current()
-	 * @return array
+	 * @return string[]
 	 */
 	public function current() {
 		return $this->_csv->current();

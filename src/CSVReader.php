@@ -10,6 +10,8 @@ namespace ZipcodeCSV;
 
 class CSVReader extends AbstractCSV implements \IteratorAggregate {
 
+	const DEFAULT_ITERATOR_CLASS = '\ZipcodeCSV\CSVIterator';
+
 	/**
 	 * @var string
 	 */
@@ -21,10 +23,10 @@ class CSVReader extends AbstractCSV implements \IteratorAggregate {
 	 * @param string $class_name	CSVIterator class name
 	 * @throws \InvalidArgumentException
 	 */
-	public function __construct($csv_path, $context = null, $class_name = '\ZipcodeCSV\CSVIterator') {
-		$reflection = new \ReflectionClass($class_name);
-		if (! $reflection->isSubclassOf('\ZipcodeCSV\CSVIterator')) {
-			throw new \InvalidArgumentException('$class_name must implements Iterator.');
+	public function __construct($csv_path, $context = null, $class_name = self::DEFAULT_ITERATOR_CLASS) {
+		if ($class_name != self::DEFAULT_ITERATOR_CLASS
+			&& ! is_subclass_of($class_name, self::DEFAULT_ITERATOR_CLASS)) {
+			throw new \InvalidArgumentException('$class_name must extends ' . self::DEFAULT_ITERATOR_CLASS);
 		}
 		$this->_iterator_class = $class_name;
 
