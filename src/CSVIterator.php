@@ -22,7 +22,7 @@ class CSVIterator implements \Iterator {
 	 * @param string $escape
 	 * @param array $options
 	 */
-	public function __construct($csv_path, $delimiter, $enclosure, $escape, $options) {
+	public function __construct($csv_path, $delimiter = ',', $enclosure = '"', $escape = '\\', array $options = array()) {
 		$open_mode = 'r';
 		$use_include_path = false;
 		if (isset($options['context'])) {

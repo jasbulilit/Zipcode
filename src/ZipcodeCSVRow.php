@@ -36,7 +36,7 @@ class ZipcodeCSVRow extends \ArrayObject {
 	const COL_SEPARATE_FLG			= 9;	// 10.一町域が二以上の郵便番号で表される場合の表示(1:該当/0:該当せず)
 	const COL_FLG_11				= 10;	// 11.小字毎に番地が起番されている町域の表示(1:該当/0:該当せず)
 	const COL_FLG_12				= 11;	// 12.丁目を有する町域の場合の表示(1:該当/0:該当せず)
-	const COL_DUPLICATE_FLG			= 12;	// 13.一つの郵便番号で二以上の町域を表す場合の表示(1:該当/0:該当せず)
+	const COL_MULTI_FLG				= 12;	// 13.一つの郵便番号で二以上の町域を表す場合の表示(1:該当/0:該当せず)
 	const COL_UPDATE_KN				= 13;	// 14.更新区分(0:変更なし/1:変更あり)
 	const COL_UPDATE_REASON_KN		= 14;	// 15.変更理由区分
 
@@ -78,7 +78,7 @@ class ZipcodeCSVRow extends \ArrayObject {
 	 */
 	public function isSplitAddress() {
 		$current_row = $this->getRawData();
-		if ($current_row[self::COL_DUPLICATE_FLG] != '1'
+		if ($current_row[self::COL_MULTI_FLG] != '1'
 			&& $current_row[self::COL_ZIPCODE] == $this->_prev_zipcode) {
 			return true;
 		}

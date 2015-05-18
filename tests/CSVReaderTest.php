@@ -7,8 +7,6 @@
  * @package	ZipcodeCSV
  */
 
-use org\bovigo\vfs\vfsStream;
-
 /**
  * @coversDefaultClass \ZipcodeCSV\CSVReader
  */

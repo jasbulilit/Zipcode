@@ -26,12 +26,8 @@ class ZipcodeCSVIterator extends CSVIterator {
 	 * @return void
 	 */
 	public function next() {
-		$row = $this->_getRawData();
+		$row = $this->current()->getRawData();
 		$this->_prev_zipcode = $row[ZipcodeCSVRow::COL_ZIPCODE];
 		parent::next();
-	}
-
-	private function _getRawData() {
-		return parent::current();
 	}
 }
