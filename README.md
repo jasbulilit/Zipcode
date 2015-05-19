@@ -1,4 +1,7 @@
 # Zipcode
+[![Build Status](https://travis-ci.org/jasbulilit/Zipcode.svg?branch=master)](https://travis-ci.org/jasbulilit/Zipcode)
+[![Code Coverage](https://scrutinizer-ci.com/g/jasbulilit/Zipcode/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/jasbulilit/Zipcode/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jasbulilit/Zipcode/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jasbulilit/Zipcode/?branch=master)
 
 郵便局のサイトからダウンロードしたCSVファイルを加工する
 http://www.post.japanpost.jp/zipcode/download.html
@@ -15,3 +18,4 @@ $save_path = '/path/to/result.csv';
 $zipcode = new \ZipcodeCSV\ZipcodeCSV('/path/to/KEN_ALL.CSV');
 $zipcode->convert(new \ZipcodeCSV\CSVWriter($save_path));
 ```
+
