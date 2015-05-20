@@ -1,5 +1,4 @@
 <?php
-use ZipcodeCSV\ZipcodeCSVRow;
 /**
  * 郵便番号CSV
  *
@@ -7,6 +6,7 @@ use ZipcodeCSV\ZipcodeCSVRow;
  * @link	https://github.com/jasbulilit/Zipcode
  * @package	ZipcodeCSV
  */
+use ZipcodeCSV\ZipcodeCSVRow;
 
 /**
  * @coversDefaultClass \ZipcodeCSV\ZipcodeCSVIterator
