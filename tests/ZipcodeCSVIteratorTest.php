@@ -22,33 +22,25 @@ class ZipcodeCSVIteratorTest extends \PHPUnit_Framework_TestCase {
 	 * @covers ::current
 	 */
 	public function testCurrent() {
-		$iterator = new \ZipcodeCSV\ZipcodeCSVIterator($this->_getDataURI(self::$_dummy_csv));
+		$iterator = new \ZipcodeCSV\ZipcodeCSVIterator(getDataURI(self::$_dummy_csv));
 
-		$this->assertEquals(new ZipcodeCSVRow($this->_toCSV(self::$_dummy_csv[0]), null), $iterator->current());
+		$this->assertEquals(new ZipcodeCSVRow(toCSV(self::$_dummy_csv[0]), null), $iterator->current());
 	}
 
 	/**
 	 * @covers ::next
 	 */
 	public function testNext() {
-		$iterator = new \ZipcodeCSV\ZipcodeCSVIterator($this->_getDataURI(self::$_dummy_csv));
+		$iterator = new \ZipcodeCSV\ZipcodeCSVIterator(getDataURI(self::$_dummy_csv));
 		$iterator->next();
 
-		$prev_row = $this->_toCSV(self::$_dummy_csv[0]);
+		$prev_row = toCSV(self::$_dummy_csv[0]);
 		$prev_zipcode = $prev_row[2];
-		$this->assertEquals(new ZipcodeCSVRow($this->_toCSV(self::$_dummy_csv[1]), $prev_zipcode), $iterator->current());
+		$this->assertEquals(new ZipcodeCSVRow(toCSV(self::$_dummy_csv[1]), $prev_zipcode), $iterator->current());
 
 		$class = new ReflectionClass($iterator);
 		$prop = $class->getProperty('_prev_zipcode');
 		$prop->setAccessible(true);
 		$this->assertEquals($prev_zipcode, $prop->getValue($iterator));
-	}
-
-	private function _getDataURI($rows) {
-		return 'data:text/plain,' . implode("\r\n", $rows);
-	}
-
-	private function _toCSV($row) {
-		return explode(',', str_replace('"', '', $row));
 	}
 }

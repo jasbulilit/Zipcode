@@ -32,12 +32,12 @@ class CSVIteratorTest extends \PHPUnit_Framework_TestCase {
 		$enclosure = "'";
 
 		$iterator = new \ZipcodeCSV\CSVIterator(
-			$this->_getDataURI(self::$_dummy_tsv),
+			getDataURI(self::$_dummy_tsv),
 			$delimiter,
 			$enclosure
 		);
 		foreach (self::$_dummy_tsv as $row) {
-			$this->assertEquals($this->_toCSV($row, $delimiter, $enclosure), $iterator->current());
+			$this->assertEquals(toCSV($row, $delimiter, $enclosure), $iterator->current());
 			$iterator->next();
 		}
 	}
@@ -48,9 +48,9 @@ class CSVIteratorTest extends \PHPUnit_Framework_TestCase {
 	public function testConstructorWithContext() {
 		$options['context'] = stream_context_create();
 
-		$iterator = new \ZipcodeCSV\CSVIterator($this->_getDataURI(self::$_dummy_csv), ',', '"', '\\', $options);
+		$iterator = new \ZipcodeCSV\CSVIterator(getDataURI(self::$_dummy_csv), ',', '"', '\\', $options);
 		foreach (self::$_dummy_csv as $row) {
-			$this->assertEquals($this->_toCSV($row), $iterator->current());
+			$this->assertEquals(toCSV($row), $iterator->current());
 			$iterator->next();
 		}
 	}
@@ -59,17 +59,17 @@ class CSVIteratorTest extends \PHPUnit_Framework_TestCase {
 	 * @covers ::current
 	 */
 	public function testCurrent() {
-		$iterator = new \ZipcodeCSV\CSVIterator($this->_getDataURI(self::$_dummy_csv));
-		$this->assertEquals($this->_toCSV(self::$_dummy_csv[0]), $iterator->current());
+		$iterator = new \ZipcodeCSV\CSVIterator(getDataURI(self::$_dummy_csv));
+		$this->assertEquals(toCSV(self::$_dummy_csv[0]), $iterator->current());
 	}
 
 	/**
 	 * @covers ::next
 	 */
 	public function testNext() {
-		$iterator = new \ZipcodeCSV\CSVIterator($this->_getDataURI(self::$_dummy_csv));
+		$iterator = new \ZipcodeCSV\CSVIterator(getDataURI(self::$_dummy_csv));
 		foreach (self::$_dummy_csv as $row) {
-			$this->assertEquals($this->_toCSV($row), $iterator->current());
+			$this->assertEquals(toCSV($row), $iterator->current());
 			$iterator->next();
 		}
 	}
@@ -78,7 +78,7 @@ class CSVIteratorTest extends \PHPUnit_Framework_TestCase {
 	 * @covers ::key
 	 */
 	public function testKey() {
-		$iterator = new \ZipcodeCSV\CSVIterator($this->_getDataURI(self::$_dummy_csv));
+		$iterator = new \ZipcodeCSV\CSVIterator(getDataURI(self::$_dummy_csv));
 		foreach (self::$_dummy_csv as $key => $row) {
 			$this->assertEquals($key, $iterator->key());
 			$iterator->next();
@@ -89,7 +89,7 @@ class CSVIteratorTest extends \PHPUnit_Framework_TestCase {
 	 * @covers ::valid
 	 */
 	public function testValid() {
-		$iterator = new \ZipcodeCSV\CSVIterator($this->_getDataURI(self::$_dummy_csv));
+		$iterator = new \ZipcodeCSV\CSVIterator(getDataURI(self::$_dummy_csv));
 		foreach (self::$_dummy_csv as $row) {
 			$this->assertTrue($iterator->valid());
 			$iterator->next();
@@ -101,23 +101,15 @@ class CSVIteratorTest extends \PHPUnit_Framework_TestCase {
 	 * @covers ::rewind
 	 */
 	public function testRewind() {
-		$iterator = new \ZipcodeCSV\CSVIterator($this->_getDataURI(self::$_dummy_csv));
+		$iterator = new \ZipcodeCSV\CSVIterator(getDataURI(self::$_dummy_csv));
 
 		$csv = null;
 		foreach (self::$_dummy_csv as $row) {
 			$csv = $iterator->current();
 			$iterator->next();
 		}
-		$this->assertEquals($this->_toCSV(self::$_dummy_csv[2]), $csv, 'brefore rewind');
+		$this->assertEquals(toCSV(self::$_dummy_csv[2]), $csv, 'brefore rewind');
 		$iterator->rewind();
-		$this->assertEquals($this->_toCSV(self::$_dummy_csv[0]), $iterator->current(), 'after rewind');
-	}
-
-	private function _getDataURI($rows) {
-		return 'data:text/plain,' . implode(PHP_EOL, $rows);
-	}
-
-	private function _toCSV($row, $delimiter = ',', $enclosure = '"') {
-		return explode($delimiter, str_replace($enclosure, '', $row));
+		$this->assertEquals(toCSV(self::$_dummy_csv[0]), $iterator->current(), 'after rewind');
 	}
 }

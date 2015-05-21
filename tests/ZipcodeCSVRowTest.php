@@ -29,7 +29,7 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * @covers ::getRawData
 	 */
 	public function testConstructor() {
-		$csv_row = $this->_getCSVRow('normal');
+		$csv_row = toCSV(self::$_dummy_csv['normal']);
 		$prev_zipcode = '1234567';
 
 		$obj = new ZipcodeCSVRow($csv_row, $prev_zipcode);
@@ -45,7 +45,7 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * 通常のデータ
 	 */
 	public function testNoumalData() {
-		$csv_row = $this->_getCSVRow('normal');
+		$csv_row = toCSV(self::$_dummy_csv['normal']);
 		$obj = new ZipcodeCSVRow($csv_row, null);
 
 		$this->assertEquals($csv_row[ZipcodeCSVRow::COL_JIS_CODE], $obj->jis_code);
@@ -65,7 +65,7 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * 「以下に掲載がない場合」の町域名テスト
 	 */
 	public function testAddressWithIkanikeisai() {
-		$csv_row = $this->_getCSVRow('ikanikeisai');
+		$csv_row = toCSV(self::$_dummy_csv['ikanikeisai']);
 		$orig_address = $csv_row[ZipcodeCSVRow::COL_COMMUNITY_AREA];
 
 		$obj = new ZipcodeCSVRow($csv_row, null);
@@ -77,7 +77,7 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * 「以下に掲載がない場合」の町域名カナテスト
 	 */
 	public function testAddressKanaWithIkanikeisai() {
-		$csv_row = $this->_getCSVRow('ikanikeisai');
+		$csv_row = toCSV(self::$_dummy_csv['ikanikeisai']);
 		$orig_address = $csv_row[ZipcodeCSVRow::COL_COMMUNITY_AREA_KANA];
 
 		$obj = new ZipcodeCSVRow($csv_row, null);
@@ -89,7 +89,7 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * 「～一円」の町域名テスト
 	 */
 	public function testAddressWithIchien() {
-		$csv_row = $this->_getCSVRow('ichien');
+		$csv_row = toCSV(self::$_dummy_csv['ichien']);
 		$orig_address = $csv_row[ZipcodeCSVRow::COL_COMMUNITY_AREA];
 		$converted = str_replace('一円', '', $orig_address);
 
@@ -102,7 +102,7 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * 「～一円」の町域名カナテスト
 	 */
 	public function testAddressKanaWithIchien() {
-		$csv_row = $this->_getCSVRow('ichien');
+		$csv_row = toCSV(self::$_dummy_csv['ichien']);
 		$orig_address = $csv_row[ZipcodeCSVRow::COL_COMMUNITY_AREA_KANA];
 		$converted = str_replace('ｲﾁｴﾝ', '', $orig_address);
 
@@ -115,7 +115,7 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * 町域名カナに「ｲﾁｴﾝ」を含むテスト
 	 */
 	public function testAddressKanaWithNotIchien() {
-		$csv_row = $this->_getCSVRow('not_ichien');
+		$csv_row = toCSV(self::$_dummy_csv['not_ichien']);
 		$orig_address = $csv_row[ZipcodeCSVRow::COL_COMMUNITY_AREA_KANA];
 
 		$obj = new ZipcodeCSVRow($csv_row, null);
@@ -126,7 +126,7 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * 「○○町(xxx)」の町域名テスト
 	 */
 	public function testAddressWithKakko() {
-		$csv_row = $this->_getCSVRow('kakko');
+		$csv_row = toCSV(self::$_dummy_csv['kakko']);
 		$orig_address = $csv_row[ZipcodeCSVRow::COL_COMMUNITY_AREA];
 
 		$obj = new ZipcodeCSVRow($csv_row, null);
@@ -138,7 +138,7 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * 「○○町(xxx)」の町域名カナテスト
 	 */
 	public function testAddressKanaWithKakko() {
-		$csv_row = $this->_getCSVRow('kakko');
+		$csv_row = toCSV(self::$_dummy_csv['kakko']);
 		$orig_address = $csv_row[ZipcodeCSVRow::COL_COMMUNITY_AREA_KANA];
 
 		$obj = new ZipcodeCSVRow($csv_row, null);
@@ -150,7 +150,7 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * 「○○町(xxx」の町域名テスト(開始括弧のみ)
 	 */
 	public function testAddressWithStartKakko() {
-		$csv_row = $this->_getCSVRow('start_kakko');
+		$csv_row = toCSV(self::$_dummy_csv['start_kakko']);
 		$orig_address = $csv_row[ZipcodeCSVRow::COL_COMMUNITY_AREA];
 
 		$obj = new ZipcodeCSVRow($csv_row, null);
@@ -162,7 +162,7 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * 「○○町(xxx」の町域名カナテスト(開始括弧のみ)
 	 */
 	public function testAddressKanaWithStartKakko() {
-		$csv_row = $this->_getCSVRow('start_kakko');
+		$csv_row = toCSV(self::$_dummy_csv['start_kakko']);
 		$orig_address = $csv_row[ZipcodeCSVRow::COL_COMMUNITY_AREA_KANA];
 
 		$obj = new ZipcodeCSVRow($csv_row, null);
@@ -174,7 +174,7 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * 「xxx)」の町域名テスト(終了括弧のみ)
 	 */
 	public function testAddressWithEndKakko() {
-		$csv_row = $this->_getCSVRow('end_kakko');
+		$csv_row = toCSV(self::$_dummy_csv['end_kakko']);
 		$orig_address = $csv_row[ZipcodeCSVRow::COL_COMMUNITY_AREA];
 
 		$obj = new ZipcodeCSVRow($csv_row, null);
@@ -186,7 +186,7 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * 「xxx)」の町域名カナテスト(終了括弧のみ)
 	 */
 	public function testAddressKanaWithEndKakko() {
-		$csv_row = $this->_getCSVRow('end_kakko');
+		$csv_row = toCSV(self::$_dummy_csv['end_kakko']);
 		$orig_address = $csv_row[ZipcodeCSVRow::COL_COMMUNITY_AREA_KANA];
 
 		$obj = new ZipcodeCSVRow($csv_row, null);
@@ -198,13 +198,9 @@ class ZipcodeCSVRowTest extends \PHPUnit_Framework_TestCase {
 	 * 複数行分割時のテスト
 	 */
 	public function testSplitAddress() {
-		$csv_row = $this->_getCSVRow('end_kakko');
+		$csv_row = toCSV(self::$_dummy_csv['end_kakko']);
 
 		$obj = new ZipcodeCSVRow($csv_row, $csv_row[ZipcodeCSVRow::COL_ZIPCODE]);
 		$this->assertTrue($obj->isSplitAddress());
-	}
-
-	private function _getCSVRow($id) {
-		return explode(',', str_replace('"', '', self::$_dummy_csv[$id]));
 	}
 }

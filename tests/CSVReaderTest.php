@@ -12,13 +12,19 @@
  */
 class CSVReaderTest extends \PHPUnit_Framework_TestCase {
 
+	private static $_dummy_csv = array(
+		'00001,"あいうえお","abcdefg",1',
+		'01101,"かきくけこ","hijklmn",2',
+		'01102,"さしすせそ","opqrstu",3'
+	);
+
 	/**
 	 * @covers ::__construct
 	 */
 	public function testSetCSVIterator() {
-		$csv_filepath = dirname(__FILE__) . '/dat/dummy_csv.csv';
+		$csv_uri = getDataURI(self::$_dummy_csv);
 		$iterator_class = 'DummyCSVIterator';
-		$reader = new \ZipcodeCSV\CSVReader($csv_filepath, null, $iterator_class);
+		$reader = new \ZipcodeCSV\CSVReader($csv_uri, null, $iterator_class);
 
 		$this->assertTrue(is_a($reader->getIterator(), $iterator_class));
 	}
@@ -29,18 +35,30 @@ class CSVReaderTest extends \PHPUnit_Framework_TestCase {
 	 * @expectedExceptionMessage $class_name must extends
 	 */
 	public function testSetInvalidIterator() {
-		$csv_filepath = dirname(__FILE__) . '/dat/dummy_csv.csv';
-		$reader = new \ZipcodeCSV\CSVReader($csv_filepath, null, 'ArrayIterator');
+		$csv_uri = getDataURI(self::$_dummy_csv);
+		$reader = new \ZipcodeCSV\CSVReader($csv_uri, null, 'ArrayIterator');
 	}
 
 	/**
 	 * @covers ::getIterator
 	 */
 	public function testGetIterator() {
-		$csv_filepath = dirname(__FILE__) . '/dat/dummy_csv.csv';
-		$reader = new \ZipcodeCSV\CSVReader($csv_filepath);
+		$csv_uri = getDataURI(self::$_dummy_csv);
+		$reader = new \ZipcodeCSV\CSVReader($csv_uri);
 
 		$this->assertTrue(is_a($reader->getIterator(), '\ZipcodeCSV\CSVIterator'));
+	}
+
+	/**
+	 * IteratorAggregate
+	 */
+	public function testIteratorAggregate() {
+		$csv_uri = getDataURI(self::$_dummy_csv);
+		$reader = new \ZipcodeCSV\CSVReader($csv_uri);
+
+		foreach ($reader as $k => $row) {
+			$this->assertEquals(toCSV(self::$_dummy_csv[$k]), $row);
+		}
 	}
 }
 
