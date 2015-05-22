@@ -31,10 +31,8 @@ class ZipcodeCSV {
 	 * @return	boolean
 	 */
 	public function convert($writer) {
-		$orig_csv = $this->_reader->getIterator();
-
 		$processed = null;
-		foreach ($orig_csv as $row) {
+		foreach ($this->_reader as $row) {
 			if (empty($row->jis_code)) {
 				continue;
 			}
@@ -53,7 +51,6 @@ class ZipcodeCSV {
 
 			$processed[$unique_key] = true;
 		}
-		unset($orig_csv);
 
 		return true;
 	}
